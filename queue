@@ -1,0 +1,52 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+struct queue{
+    int value;
+    struct queue *next;
+};
+struct queue*front=nullptr;
+struct queue*rear=nullptr;
+void Enqueue(int value){
+     struct queue* temp = new queue;
+    temp->value = value;
+    temp->next = nullptr;
+    
+    if (front == nullptr) {
+        front = rear = temp;
+    } else {
+        rear->next = temp;
+        rear = temp;
+    }
+}
+void Dequeue() {//dequeue front
+    if (front == nullptr) {
+        cout << "Queue is empty." << endl;
+        return;
+    }
+    struct queue* temp = front;
+    front = front->next;
+    delete temp;
+}
+
+
+void print(){
+queue*t=front; 
+while(t!=NULL){
+cout<<t->value;
+t = t->next; 
+cout<<endl;
+}
+}
+int main(){
+    Enqueue(12);
+    Enqueue(2);
+    Enqueue(22);
+    Enqueue(222);
+    cout<<"enqueue"<<endl;
+    print();
+    Dequeue();
+    cout<<"dequeue"<<endl;
+    print();
+    return 0;
+}
