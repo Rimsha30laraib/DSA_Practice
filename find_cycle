@@ -1,0 +1,183 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+struct edge {
+    char edge1;
+    edge* next;
+};
+
+struct vertex {
+    char data;
+    vertex* next;
+    edge* edge_list;
+    bool visited;
+};
+
+struct node {
+    char value;
+    struct node* next;
+};
+
+void push(node*& top, char value) {
+    struct node* newnode = new node;
+    newnode->value = value;
+    newnode->next = top;
+    top = newnode;
+}
+
+bool pop(node*& top, char& value) {
+    if (top == nullptr) {
+        cout << "Stack Underflow" << endl;
+        return false;
+    }
+
+    struct node* temp = top;
+    value = temp->value;
+    top = temp->next;
+    delete temp;
+    return true;
+}
+
+vertex* find_vertex(vertex* graph, char data) {
+    vertex* current = graph;
+    while (current != nullptr) {
+        if (current->data == data) {
+            return current;
+        }
+        current = current->next;
+    }
+    return nullptr;
+}
+
+bool hasCycleUtil(vertex* graph, char data, char parent, node* stack_top) {
+    vertex* current = find_vertex(graph, data);
+
+    if (current && !current->visited) {
+        current->visited = true;
+        push(stack_top, data);
+
+        edge* edge = current->edge_list;
+        while (edge != nullptr) {
+            char to_vertex = edge->edge1;
+            if (to_vertex != parent) {
+                if (hasCycleUtil(graph, to_vertex, data, stack_top)) {
+                    return true;
+                }
+            }
+            edge = edge->next;
+        }
+    } else if (current && current->visited) {
+        while (stack_top != nullptr && stack_top->value != data) {
+            pop(stack_top, data);
+        }
+        return true;
+    }
+
+    return false;
+}
+
+bool hasCycle(vertex* graph) {
+    node* stack_top = nullptr;
+    
+    vertex* current = graph;
+    while (current != nullptr) {
+        if (!current->visited) {
+            if (hasCycleUtil(graph, current->data, '\0', stack_top)) {
+                return true;
+            }
+        }
+        current = current->next;
+    }
+
+    return false;
+}
+
+void insert_vertex(vertex*& list, char value) {
+    vertex* temp = new vertex;
+    temp->data = value;
+    temp->next = nullptr;
+    temp->edge_list = nullptr;
+    temp->visited = false;
+
+    if (list == nullptr) {
+        list = temp;
+    } else {
+        vertex* ptr = list;
+        while (ptr->next != nullptr) {
+            ptr = ptr->next;
+        }
+        ptr->next = temp;
+    }
+}
+
+void insert_edge(vertex*& list, char vertex_value, char edge_value) {
+    vertex* current = list;
+    while (current != nullptr) {
+        if (current->data == vertex_value) {
+            edge* temp = new edge;
+            temp->edge1 = edge_value;
+            temp->next = nullptr;
+
+            if (current->edge_list == nullptr) {
+                current->edge_list = temp;
+            } else {
+                edge* ptr = current->edge_list;
+                while (ptr->next != nullptr) {
+                    ptr = ptr->next;
+                }
+                ptr->next = temp;
+            }
+            break;
+        }
+        current = current->next;
+    }
+}
+
+void print(vertex* list) {
+    vertex* current = list;
+    while (current != nullptr) {
+        cout << current->data << endl;
+        current = current->next;
+    }
+}
+
+void print_edge(vertex* list) {
+    vertex* current = list;
+    while (current != nullptr) {
+        edge* temp = current->edge_list;
+        while (temp != nullptr) {
+            cout << "Vertex: " << current->data << " added to the Edge: " << temp->edge1 << endl;
+            temp = temp->next;
+        }
+        current = current->next;
+    }
+}
+
+int main() {
+    vertex* list = nullptr;
+    insert_vertex(list, 'a');
+    insert_vertex(list, 'b');
+    insert_vertex(list, 'c');
+    insert_vertex(list, 'd');
+    insert_vertex(list, 'e');
+    print(list);
+
+    insert_edge(list, 'a', 'b');
+    insert_edge(list, 'a', 'c');
+    insert_edge(list, 'b', 'd');
+    insert_edge(list, 'c', 'c');
+    insert_edge(list, 'c', 'e');
+
+    print_edge(list);
+
+
+    if (hasCycle(list)) {
+        cout << "The graph contains a cycle." << endl;
+    } else {
+        cout << "The graph does not contain a cycle." << endl;
+    }
+
+    return 0;
+}
