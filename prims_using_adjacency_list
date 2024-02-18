@@ -1,0 +1,93 @@
+#include <iostream>
+#include <climits>
+using namespace std;
+int minWeight(int weight[], bool visited[], int V) {
+    int min = INT_MAX, minIndex = -1;
+    for (int v = 0; v < V; v++) {
+        if (!visited[v] && weight[v] < min) {
+            min = weight[v];
+            minIndex = v;
+        }
+    }
+    return minIndex;
+}
+void print(int parent[], int **adjMat, int V) {
+    int totalWeight = 0;  // Initialize a variable to store the total weight of the MST
+
+    for (int i = 1; i < V; i++) {
+        int u = parent[i];
+        int v = i;
+        int edgeWeight = adjMat[i][u]; // Get the weight of the current edge
+        totalWeight += edgeWeight; // Add the weight to the total
+
+        cout << "Edge: " << u << " - " << v << "\tWeight: " << edgeWeight << endl;
+    }
+
+    cout << "Total Weight of MST: " << totalWeight << endl;
+}
+
+void prims(int **adjMat, int V) {
+    int parent[V];
+    int weight[V];
+    bool visited[V];
+
+    for (int i = 0; i < V; i++) {
+        weight[i] = INT_MAX;
+        visited[i] = false;
+    }
+    weight[0] = 0;
+    parent[0] = -1;
+
+    for (int count = 0; count < V - 1; count++) {
+        int u = minWeight(weight, visited, V);
+        visited[u] = true;
+
+        for (int v = 0; v < V; v++) {
+            if (adjMat[u][v] && !visited[v] && adjMat[u][v] < weight[v]) {
+                parent[v] = u;
+                weight[v] = adjMat[u][v];
+            }
+        }
+    }
+    print(parent, adjMat, V);
+}
+void adjmatt(){
+     int v, e;
+    cout << "Enter the number of vertices: ";
+    cin >> v;
+    cout << "Enter the number of edges: ";
+    cin >> e;
+
+    int *adjmat = new int[v];
+    for (int i = 0; i < v; i++) {
+        adjmat[i] = new int[v];
+        for (int j = 0; j < v; j++) {
+            adjmat[i][j] = 0;
+        }
+    }
+    for (int i = 0; i < e; i++) {
+        int v1, v2, weight;
+        cout << "Enter v1: ";
+        cin >> v1;
+        cout << "Enter v2: ";
+        cin >> v2;
+        cout << "Enter weight: ";
+        cin >> weight;
+        adjmat[v1][v2] = weight;
+        adjmat[v2][v1] = weight; // For an undirected graph
+    }
+     prims(adjmat,v);
+    for (int i = 0; i < v; i++) {
+        delete adjmat[i];
+    }
+    delete adjmat;
+}
+
+
+
+int main() {
+   adjmatt();
+  
+
+    return 0;
+}
