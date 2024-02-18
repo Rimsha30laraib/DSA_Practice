@@ -1,0 +1,144 @@
+#include <iostream>
+#include <climits>
+#include <vector>
+using namespace std;
+
+struct edge {
+    int to_vertex;
+    int weight;
+    edge* next;
+};
+
+struct vertex {
+    int data;
+    vertex* next;
+    struct edge* edge_list;
+    int distance; // For Dijkstra's algorithm
+};
+
+void add_vertex(struct vertex*& graph, int value) {
+    struct vertex* v = new vertex;
+    v->data = value;
+    v->next = nullptr;
+    v->edge_list = nullptr;
+    v->distance = INT_MAX; // Initialize distance to infinity
+    if(graph==nullptr){
+        graph=v;
+    }
+    else{
+        vertex*ptr=graph;
+        while(ptr->next!=nullptr){
+            ptr=ptr->next;
+        }
+        ptr->next=v;
+        }
+}
+
+void add_edge(vertex* graph, int data, int v, int weight) {
+    vertex* current = graph;
+    while (current != nullptr) {
+        if (current->data == data) {
+            edge* elist = new edge;
+            elist->to_vertex = v;
+            elist->weight = weight;
+            elist->next = current->edge_list;
+            current->edge_list = elist;
+            cout << "Edge added between vertex " << v << " and " << data << " with weight " << weight << endl;
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Vertex not found." << endl;
+}
+
+void print_vertex(vertex* graph) {
+    vertex* t = graph;
+    while (t != NULL) {
+        cout << "Vertex:"<< t->data<<" ";
+        edge* elist = t->edge_list;
+        while (elist != NULL) {
+            cout << "edge :"<<elist->to_vertex <<" "<<"Weight:" << elist->weight <<" "<<"distance :"<<t->distance<<endl;
+            elist = elist->next;
+        }
+        t = t->next;
+    }
+    cout<<endl;
+}
+
+vertex* find_min_distance_vertex(vertex* graph, bool visited[], int V) {
+    vertex* min_vertex = nullptr;
+    int min_distance = INT_MAX;
+
+    vertex* current = graph;
+    while (current != nullptr) {
+        if (!visited[current->data] && current->distance < min_distance) {
+            min_distance = current->distance;
+            min_vertex = current;
+        }
+        current = current->next;
+    }
+
+    return min_vertex;
+}
+void dijkstra(vertex* graph, int source, int V) {
+    bool visited[V];
+    for (int i = 0; i < V; i++) {
+        visited[i] = false;
+        graph->distance = INT_MAX;
+    }
+    // Set the distance of the source vertex to 0
+    vertex* current = graph;
+    while (current != nullptr) {
+        if (current->data == source) {
+            current->distance = 0;
+            break;
+        }
+        current = current->next;
+    }
+
+    for (int count = 0; count < V - 1; count++) {
+        vertex* u = find_min_distance_vertex(graph, visited, V);
+        visited[u->data] = true;
+
+        edge* elist = u->edge_list;
+        while (elist != nullptr) {
+            vertex* v = graph;
+            while (v != nullptr) {
+                if (v->data == elist->to_vertex) {
+                    if (!visited[v->data] && (u->distance + elist->weight) < v->distance) {
+                        v->distance = u->distance + elist->weight;
+                    }
+                    break;
+                }
+                v = v->next;
+            }
+            elist = elist->next;
+        }
+    }
+    cout << "Shortest Distances from Source (" << source << "):" << endl;
+    vertex* temp = graph;
+    while (temp != nullptr) {
+        cout << "From Source " << source << " to Vertex " << temp->data << ": " << temp->distance << endl;
+        temp = temp->next;
+    }
+}
+
+
+int main() {
+    int V = 3; // Change this value as needed
+    vertex* graph = nullptr;
+   add_vertex(graph, 0);
+     add_vertex(graph, 1);
+    add_vertex(graph, 2);
+
+    add_edge(graph, 0, 1, 4);
+    add_edge(graph, 0, 2, 1);
+    add_edge(graph, 1, 2, 2);
+
+    print_vertex(graph);
+
+    int source = 0; // Change this to set the source vertex
+    dijkstra(graph, source, V);
+
+    return 0;
+}
