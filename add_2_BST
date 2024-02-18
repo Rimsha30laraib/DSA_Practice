@@ -1,0 +1,116 @@
+#include<iostream>
+using namespace std;
+
+struct bstnode{
+    int data;
+    struct bstnode*left;
+    struct bstnode*right;
+};
+bstnode *insert(bstnode*node1,int value){
+    if (node1==NULL){
+        struct bstnode*temp=(struct bstnode*)malloc(sizeof (struct bstnode));
+        temp->data=value;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if (value>node1->data){
+        node1->right=insert(node1->right,value);
+    }
+    if (value<node1->data){
+        node1->left=insert(node1->left,value);
+    }
+    return node1;
+}
+bool equal(bstnode* node1, bstnode* node2) {
+    if (node1 == nullptr && node2 == nullptr) {
+        return false;
+    }
+    if (node1 != nullptr && node2 != nullptr) {
+        if (node1->data == node2->data && equal(node1->left, node2->left) &&equal(node1->right, node2->right)){
+          return true;
+        }
+           
+    }
+    return false;
+}
+void mirrorImage(bstnode* root) {
+    if (root == nullptr) {
+        return;
+    }
+
+    // Swap the left and right subtrees of the current node.
+    bstnode* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+
+    // Recursively find the mirror image for the left and right subtrees.
+    mirrorImage(root->left);
+    mirrorImage(root->right);
+}
+bool find_mirror(bstnode*node1,bstnode*node2){
+   if (node1 == nullptr && node2 == nullptr) {
+        return false;
+    }
+    if (node1 != nullptr && node2 != nullptr) {
+        if (node1->data == node2->data &&find_mirror(node1->left, node2->right) &&find_mirror(node1->right, node2->left)){
+            return true;
+        }
+    }
+    return true;
+}
+void inorder(bstnode*node){
+    if(node!=NULL){
+        inorder(node->left);
+        cout<<node->data<<endl;
+         inorder(node->right);
+    }
+    
+}
+int main(){
+    struct bstnode*node1=(struct bstnode*)malloc(sizeof (struct bstnode));
+    node1->data=9;
+    node1->left=NULL;
+    node1->right=NULL;
+    insert(node1, 4);
+    insert(node1, 13);
+    insert(node1, 3);
+    insert(node1, 5);
+    insert(node1,11);
+    insert(node1, 14);
+
+    cout<<"tree 1"<<endl;
+    inorder(node1);
+    struct bstnode*node2=(struct bstnode*)malloc(sizeof (struct bstnode));
+    node2->data=9;
+    node2->left=NULL;
+    node2->right=NULL;
+    insert(node2, 13);
+    insert(node2, 4);
+    insert(node2, 14);
+    insert(node2, 11);
+    insert(node2, 5);
+    insert(node2, 3); 
+    cout<<"tree 2"<<endl;
+    inorder(node2);
+    // ...
+if(find_mirror(node1, node2)){
+    cout << "tree1 is the mirror image of tree2" << endl;
+} else {
+    cout << "tree1 is not the mirror image of tree2" << endl;
+}
+
+mirrorImage(node2);
+
+if(equal(node1, node2)){
+    cout << "The trees are equal." << endl;
+} else {
+    cout << "The trees are not equal." << endl;
+}
+
+// ...
+
+    mirrorImage(node2);
+    inorder(node2);
+    return 0;
+}
