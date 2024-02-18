@@ -1,0 +1,260 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+
+struct list{
+    int value;
+    list*prev;
+    list*next;
+};
+void insert(list*&list_1,int value){
+    list*temp=(struct list*)malloc(sizeof(struct list));
+    list*ptr=list_1;
+    temp->value=value;
+    temp->prev=nullptr;
+    temp->next=nullptr;
+    if(list_1==nullptr){
+        list_1=temp;
+    }
+    else{
+        while(ptr->next!=nullptr){
+            ptr=ptr->next;
+        }
+        ptr->next=temp;
+        temp->prev=ptr;
+        temp->next=nullptr;
+} 
+}
+void insert_in_between(list*&list_1,int aftervalue,int value){
+    list*temp=(struct list*)malloc(sizeof(struct list));
+    temp->value=value;
+    temp->prev=nullptr;
+    temp->next=nullptr;
+    list*current=list_1;
+    while(current!=nullptr){
+    if(current->value==aftervalue){
+        list*ptr=current->next;
+        temp->next=ptr;
+        temp->prev=current;
+        current->next=temp;
+    }
+    current=current->next;
+}}
+list*ascending_order(list*list1,list*&ascending_list){
+    list*temp=list1;
+    list*ptr=list1->next;
+    
+    while(ptr!=nullptr){
+        if(temp->value>ptr->value){
+          int t=temp->value;
+          temp->value=ptr->value;
+          ptr->value=t;
+        }
+        if(temp->value<=ptr->value){
+            insert(ascending_list,temp->value);
+            temp=temp->next;
+            ptr=ptr->next;
+        }
+    }
+    insert(ascending_list,temp->value);
+    return ascending_list;
+    
+
+}
+list*find_merge_list(list*list1,list*list2,list*&merge_1){
+    list*temp1=list1;
+    list*temp2=list2;
+    while (temp1 != nullptr && temp2 != nullptr){
+        if(temp1->value<temp2->value){
+            insert(merge_1,temp1->value);
+            insert(merge_1,temp2->value);
+        }
+        if(temp1->value>temp2->value){
+            insert(merge_1,temp2->value);
+            insert(merge_1,temp1->value);
+        }
+        if(temp1->value==temp2->value){
+            insert(merge_1,temp1->value);
+            insert(merge_1,temp2->value);
+        }
+        temp1=temp1->next;
+        temp2=temp2->next;
+    }
+    while (temp1 != nullptr) {
+        insert(merge_1, temp1->value);
+        temp1 = temp1->next;
+    }
+
+    // If elements are remaining in list2, insert them
+    while (temp2 != nullptr) {
+        insert(merge_1, temp2->value);
+        temp2 = temp2->next;
+    }
+    return merge_1;
+}
+list*customize_insert(list* list1,int data1,int data2,list*&c_insert){
+    list*temp=list1;
+    while(temp!=nullptr){
+        if(temp->value==data1){
+        insert(c_insert,temp->value);
+        insert(c_insert,data2);
+        temp=temp->next;
+        }
+        else{
+        insert(c_insert,temp->value);
+        temp=temp->next;
+        }
+        
+    }
+  return c_insert;
+}
+    
+
+list*diff(list*list1,list*list2,list*&difference){//works only in sorted list
+    list*temp1=list1;
+    list*temp2=list2;
+     while(temp1!=nullptr&&temp2!=nullptr){
+        if(temp1->value==temp2->value){
+            temp1=temp1->next;
+            temp2=temp2->next;
+        }
+        else{
+            if(temp1->value<temp2->value){
+                insert(difference,temp1->value);
+                temp1=temp1->next;
+         }
+         else{
+            temp2=temp2->next;
+         } 
+        }
+     }
+      
+     return difference;
+}
+list* intersection(list*list_1,list*list_2,list*&intersect){//only works for sorted list
+    list*temp=list_1;
+    list*curr=list_2;
+    while(temp!=nullptr&&curr!=nullptr){
+         if(temp->value==curr->value){
+         insert(intersect,temp->value);
+         temp=temp->next;
+         curr=curr->next;
+         }
+         if(temp->value<curr->value){
+            temp=temp->next;
+         }
+         else{
+            curr=curr->next;
+         } 
+    }
+    return intersect;
+}
+list* find_union(list* list_1, list* list_2, list*& union1) {
+    list* temp1 = list_1;
+    list* temp2 = list_2;
+
+    while (temp1 != nullptr || temp2 != nullptr) {
+        if (temp1 != nullptr && (temp2 == nullptr || temp1->value < temp2->value)) {
+            // Insert temp1's value into union1
+            if (union1 == nullptr || union1->value != temp1->value) {
+                insert(union1, temp1->value);
+            }
+            temp1 = temp1->next;
+        } 
+        else if (temp2 != nullptr && (temp1 == nullptr || temp1->value > temp2->value)) {
+            // Insert temp2's value into union1
+            if (union1 == nullptr || union1->value != temp2->value) {
+                insert(union1, temp2->value);
+            }
+            temp2 = temp2->next;
+        } 
+        else {
+            // Values are equal, insert either one into union1
+            if (union1 == nullptr || union1->value != temp1->value) {
+                insert(union1, temp1->value);
+            }
+            temp1 = temp1->next;
+            temp2 = temp2->next;
+        }
+    }
+
+    return union1;
+}
+
+
+void print_reverse(list*list_1){
+    list*current=list_1;
+    while(current->next!=nullptr){
+        current=current->next;
+    }
+    while(current!=nullptr){
+        cout<<current->value<<endl;
+        current=current->prev;
+    }
+}
+void print(list*list_1){
+    list*current=list_1;
+    while(current!=nullptr){
+        cout<<current->value<<endl;
+        current=current->next;
+    }
+
+}
+int main(){
+    struct list*list_1=(struct list*)malloc(sizeof(struct list));
+    list_1=nullptr;
+    struct list*list_2=(struct list*)malloc(sizeof(struct list));
+    list_2=nullptr;
+    list*intersect=nullptr;
+    list*union1=nullptr;
+    list*difference=nullptr;
+    list*merge_1=nullptr;
+    list*ascending_list=nullptr;
+    insert(list_1,1);
+    insert(list_1,3);
+    insert(list_1,4);
+    insert(list_1,7);
+    insert(list_1,12);
+    insert(list_2,1);
+    insert(list_2,5);
+    insert(list_2,7);
+    insert(list_2,9);
+    //print(list_1);
+    //insert_in_between(list_1,57,90);
+    cout<<"list 1"<<endl;
+    print(list_1);
+    cout<<"list 2"<<endl;
+    print(list_2);
+    find_union(list_1,list_2,union1);
+    cout<<"union list"<<endl;
+    print(union1);
+    intersection(list_1,list_2,intersect);
+    cout<<"intersection_list"<<endl;
+    print(intersect);
+    diff(list_1,list_2,difference);
+    cout<<"difference"<<endl;
+    print(difference);
+    find_merge_list(list_1,list_2,merge_1);
+    cout<<"merge list"<<endl;
+    print(merge_1);
+    ascending_order(merge_1,ascending_list);
+    cout<<"ascending list"<<endl;
+    print(ascending_list);
+    //insert_in_between(list_1,3,10);
+    list*list_3=(struct list*)malloc(sizeof(struct list));
+    list_3=nullptr;
+    list*c_insert=nullptr;
+    insert(list_3,2);
+    insert(list_3,4);
+    insert(list_3,3);
+    insert(list_3,2);
+    insert(list_3,8);
+    insert(list_3,2);
+    insert(list_3,5);
+    insert(list_3,1);
+   insert(list_3,2);
+    customize_insert(list_3,2,10,c_insert);
+    cout<<"customize insert"<<endl;
+    print(c_insert);
+
+}
