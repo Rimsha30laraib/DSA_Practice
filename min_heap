@@ -1,0 +1,70 @@
+#include<iostream>
+using namespace std;
+void min_heap(int arr[],int n,int min_heap_arr[]){
+    min_heap_arr[0]=arr[0];
+    for(int i=0;i<(n/2);i++){
+    double p=(i-1)/2;
+    int p1 = static_cast<int>(p);
+    int lc=2*i+1;
+    int rc=2*i+2;
+    if(min_heap_arr[i]<arr[lc]){
+        min_heap_arr[lc]=arr[lc];
+    }
+   else{
+        int t=min_heap_arr[i];
+        min_heap_arr[i]=arr[lc];
+        arr[lc]=t;
+        min_heap_arr[lc]=arr[lc];
+        if(min_heap_arr[p1]>min_heap_arr[i]){
+        int u=min_heap_arr[i];
+        min_heap_arr[i]=min_heap_arr[p1];
+        min_heap_arr[p1]=u;
+        }
+        if(min_heap_arr[0]>min_heap_arr[p1]){
+        int s=min_heap_arr[p1];
+        min_heap_arr[p1]=min_heap_arr[0];
+        min_heap_arr[0]=s;
+        }
+       
+    }
+    
+    if(min_heap_arr[i]<arr[rc]){
+        min_heap_arr[rc]=arr[rc];
+    }
+    else{
+        int t=min_heap_arr[i];
+        min_heap_arr[i]=arr[rc];
+        arr[rc]=t;
+        min_heap_arr[rc]=arr[rc];
+        if(min_heap_arr[p1]>min_heap_arr[i]){
+        int u=min_heap_arr[i];
+        min_heap_arr[i]=min_heap_arr[p1];
+        min_heap_arr[p1]=u;
+        }
+        if(min_heap_arr[0]>min_heap_arr[p1]){
+        int s=min_heap_arr[p1];
+        min_heap_arr[p1]=min_heap_arr[0];
+        min_heap_arr[0]=s;
+        }
+    }
+    }
+}
+int main(){
+    int arr[]={75,19,20,18,85,95,55,29,17,9};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int heap_arr[n];
+    int min_heap_arr[n];
+    for (int i = 0; i < n; i++) {
+        heap_arr[i] = 0;
+    }
+    for (int i=0;i<n;i++){
+        cout<<"array list"<<" ";
+        cout<<arr[i]<<endl;
+    }
+    min_heap(arr,n,min_heap_arr);
+    for (int i=0;i<n;i++){
+        cout<<"min heap list"<<" ";
+        cout<<min_heap_arr[i]<<endl;
+    }
+    
+}
