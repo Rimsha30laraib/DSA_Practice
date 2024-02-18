@@ -1,0 +1,86 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+struct edge{
+    char edge1;
+    edge*next;
+};
+struct vertex{
+    char data;
+    vertex*next;
+    edge*edge_list;
+};
+void insert_vertex(vertex*&list,char value){
+    vertex*temp=new vertex;
+    temp->data=value;
+    temp->next=nullptr;
+    temp->edge_list=nullptr;
+    if(list==nullptr){
+        list=temp;
+    }
+    else{
+        vertex*ptr=list;
+        while(ptr->next!=nullptr){
+            ptr=ptr->next;
+        }
+        ptr->next=temp;
+        }
+}
+void insert_edge(vertex*& list, char edge_value, char vertex_value) {
+    edge* temp = new edge;
+    temp->edge1 = edge_value;
+    temp->next = nullptr;
+    
+    vertex* current = list;
+    while (current != nullptr) {
+        if (vertex_value == current->data) {
+            if (current->edge_list == nullptr) {
+                current->edge_list = temp;
+            } else {
+                edge* ptr = current->edge_list;
+                while (ptr->next != nullptr) {
+                    ptr = ptr->next;
+                }
+                ptr->next = temp;
+            }
+            break;
+        }
+        current = current->next;
+    }
+}
+void print(vertex*list){
+    vertex*current=list;
+    while(current!=nullptr){
+        cout<<current->data<<endl;
+        current=current->next;
+    }
+
+}
+void print_edge(vertex* list) {
+    vertex* current = list;
+    while (current != nullptr) {
+        edge* temp = current->edge_list; 
+        while (temp != nullptr) {
+            cout << "Vertex:"<<" "<<current->data<<" "<<"added to the Edge:"<<" " << temp->edge1 << endl;
+            temp = temp->next;  
+        }
+        current = current->next;
+    }
+}
+
+int main(){
+    vertex*list=nullptr;
+    insert_vertex(list,'a');
+    insert_vertex(list,'b');
+    insert_vertex(list,'c');
+    insert_vertex(list,'d');
+    insert_vertex(list,'e');
+    print(list);
+    insert_edge(list,'b','a');
+    insert_edge(list,'c','a');
+    insert_edge(list,'d','a');
+    insert_edge(list,'c','b');
+    insert_edge(list,'d','b');
+    print_edge(list);
+    
+}
