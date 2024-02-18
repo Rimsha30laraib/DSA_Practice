@@ -1,0 +1,68 @@
+#include<iostream>
+using namespace std;
+
+struct bstnode{
+    int data;
+    struct bstnode*left;
+    struct bstnode*right;
+};
+bstnode *insert(bstnode*node,int value){
+    if (node==NULL){
+        struct bstnode*temp=(struct bstnode*)malloc(sizeof (struct bstnode));
+        temp->data=value;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if (value>node->data){
+        node->right=insert(node->right,value);
+        
+    }
+    if (value<node->data){
+        node->left=insert(node->left,value);
+       
+    }
+    return node;
+}
+
+int height(bstnode*node){
+    int lsheight,rsheight;
+    if (node==NULL){
+        return -1;
+    }
+    lsheight=height(node->left);
+    rsheight=height(node->right);
+    if(lsheight>rsheight){
+        return(lsheight+1);
+    }
+    else{
+        return(rsheight+1);
+    }
+}
+int inorder(bstnode*node){
+    if(node!=NULL){
+        
+        inorder(node->left);
+        inorder(node->right);
+        cout<<node->data<<endl;
+        cout<<height(node)<<endl;
+    }
+    
+    return 0;
+}
+int main(){
+    struct bstnode*node=(struct bstnode*)malloc(sizeof (struct bstnode));
+    node->data=67;
+    node->left=NULL;
+    node->right=NULL;
+    insert(node,89);
+    insert(node,96);
+    insert(node,69);
+    insert(node,79); 
+    insert(node,99);
+    inorder(node);
+    cout<<"the height of the given tree is:";
+    cout<<height(node)<<endl;
+    return 0;
+
+}
