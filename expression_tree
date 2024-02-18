@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct TreeNode {
+    char data;
+    TreeNode* left;
+    TreeNode* right;
+};
+bool isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+TreeNode* createNode(char data) {
+    TreeNode* newNode = new TreeNode;
+    newNode->data = data;
+    newNode->left = newNode->right = nullptr;
+    return newNode;
+}
+TreeNode* constructExpressionTree(string expression) {
+    TreeNode* root = nullptr;
+    TreeNode* current = nullptr;
+    TreeNode* prev = nullptr;
+    for (char c : expression) {
+        if (!isOperator(c)) {
+            current = createNode(c);
+        }
+        else {
+            current = createNode(c);
+            current->right = prev;
+            if (root == nullptr || (!isOperator(root->data) && current->data != '=')) {
+                current->left = root;
+                root = current;
+            }
+            else {
+                TreeNode* temp = root;
+                while (temp->right != nullptr) {
+                    temp = temp->right;
+                }
+                temp->right = current;
+            }
+        }
+        prev = current;
+    }
+    return root;
+}
+void inorderTraversal(TreeNode* root) {
+    if (root!=nullptr) {
+        inorderTraversal(root->left);
+        cout << root->data << " ";
+        inorderTraversal(root->right);
+    }
+}
+int main() {
+    string expression = "a+b*c-d/e";
+    TreeNode* root = constructExpressionTree(expression);
+    cout << "Inorder Traversal of Expression Tree: ";
+    inorderTraversal(root);
+    cout << endl;
+    return 0;
+}
