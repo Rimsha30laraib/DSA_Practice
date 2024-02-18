@@ -1,0 +1,120 @@
+#include<iostream>
+using namespace std;
+
+struct bstnode{
+    int data;
+    struct bstnode*left;
+    struct bstnode*right;
+};
+bstnode *insert(bstnode*node,int value){
+    if (node==NULL){
+        struct bstnode*temp=(struct bstnode*)malloc(sizeof (struct bstnode));
+        temp->data=value;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if (value>node->data){
+        node->right=insert(node->right,value);
+        
+    }
+    if (value<node->data){
+        node->left=insert(node->left,value);
+       
+    }
+   
+    return node;
+}
+void search(bstnode*node,int to_search){
+    if (node==NULL){
+        cout<<"value not found in an existing tree or tree might not exist"<<endl;
+    }
+    if(to_search==node->data && node!=NULL){
+        cout<<"value found at:";
+        cout<<node->data<<endl;
+    }
+    if (to_search>node->data && node!=NULL){
+        search(node->right,to_search);
+    }
+     if (to_search<node->data && node!=NULL){
+        search(node->left,to_search);
+    }
+    
+}
+struct bstnode* deletion(struct bstnode* node, int todel) {
+    struct bstnode*temp=(struct bstnode*)malloc(sizeof (struct bstnode));
+    struct bstnode*smallest=(struct bstnode*)malloc(sizeof (struct bstnode));
+    if (node == NULL) {
+        cout << "Value not found";
+        return NULL;
+    }
+    if (todel < node->data) {
+        node->left = deletion(node->left, todel);
+    } 
+    else if (todel > node->data) {
+        node->right = deletion(node->right, todel);
+    } 
+    else {
+        if (node->left == NULL) {
+            temp = node->right;
+            free(node);
+            return temp;
+        } 
+        else if (node->right == NULL) {
+            temp = node->left;
+            free(node);
+            return temp;
+        }
+        // Node with two children, find the inorder successor (smallest node in the right subtree)
+        smallest = node->right;
+        while (smallest->left != NULL) {
+            smallest = smallest->left;
+        }
+        // Copy the inorder successor's data to this node
+        node->data = smallest->data;
+        // Delete the inorder successor
+        node->right = deletion(node->right, smallest->data);
+    }
+    return node;
+}
+void inorder(bstnode*node){
+    if(node!=NULL){
+        inorder(node->left);
+        inorder(node->right);
+        cout<<node->data<<endl;
+    }
+    
+}
+void preorder (bstnode*node){
+    if(node!=NULL){
+        preorder(node->left);
+        preorder(node->right);
+        cout<<node->data<<endl;
+    }
+}
+
+void postorder(bstnode*node){
+    if(node!=NULL){
+        postorder(node->left);
+        postorder(node->right);
+        cout<<node->data<<endl;
+    }
+}
+int main(){
+    struct bstnode*node=(struct bstnode*)malloc(sizeof (struct bstnode));
+    node->data=67;
+    node->left=NULL;
+    node->right=NULL;
+    insert(node,89);
+    insert(node,96);
+    insert(node,69);
+    insert(node,79); 
+    insert(node,99);
+   // inorder(node);
+    //search(node,9);
+    deletion(node,96);
+    inorder(node);
+
+    return 0;
+
+}
