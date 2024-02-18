@@ -1,0 +1,84 @@
+#include<iostream>
+#include<string>
+#include<stack>
+using namespace std;
+struct node{
+    int value;
+    struct node*next;
+};
+void push(node*& top, int value) {
+    struct node*newnode=NULL;
+    newnode=(struct node*)malloc(sizeof (struct node));
+    newnode->value = value;
+    newnode->next = top;
+    top = newnode;
+}
+bool pop(node*& top, int& value) {
+    if (top == NULL) {
+        std::cout << "Stack Underflow" << std::endl;
+        return false;
+    }
+    struct node*temp=NULL;
+    temp=(struct node*)malloc(sizeof (struct node));
+    temp = top;
+    value = temp->value;
+    top = temp->next;
+    free(temp);
+    return true;
+}
+bool isOperator(char c) {
+    return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+int getPrecedence(char c) {
+    if (c == '+' || c == '-')
+        return 1;
+    if (c == '*' || c == '/')
+        return 2;
+    return 0;
+}
+bool isAlphanumeric(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+}
+string infix_to_postfix(string infix_exp){
+    string postfix="";
+    stack<char> s;
+
+    for (int i = 0; i < infix_exp.length(); i++) {
+        char currentChar = infix_exp[i];
+
+        if (isAlphanumeric(currentChar)) {
+            postfix=postfix+currentChar;
+        } 
+        else if (currentChar == '(') {
+            s.push(currentChar);
+        } 
+        else if (currentChar == ')') {
+            while (!s.empty() && s.top() != '(') {
+                postfix = postfix+s.top();
+                s.pop();
+            }
+            if (!s.empty() && s.top() == '(') {
+                s.pop();
+            }
+        } 
+        else if (isOperator(currentChar)) {
+            while (!s.empty() && getPrecedence(s.top()) >= getPrecedence(currentChar)) {//!s.empty() use to check weather the stack is empty or not
+                postfix += s.top();
+                s.pop();
+            }
+            s.push(currentChar);
+        }
+    }
+    while (!s.empty()) {
+        postfix =postfix+ s.top();
+        s.pop();
+    }
+    return postfix;
+}
+int main(){
+    string infix_exp="A+B-C/D";
+    string postfix_exp=infix_to_postfix(infix_exp);
+    cout<<postfix_exp;
+    return 0;
+
+}
