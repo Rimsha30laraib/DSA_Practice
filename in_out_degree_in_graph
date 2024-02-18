@@ -1,0 +1,105 @@
+#include <iostream> 
+#include <stdlib.h>
+using namespace std;
+struct edge{
+    int to_vertex;
+    edge*next;
+};
+struct vertex{
+    int data;
+    vertex*next;
+    struct edge * edge_list;
+} ;  
+ void add_vertex(struct vertex*&graph, int value){
+    vertex* temp = new vertex;
+    temp->data = value;
+    temp->next = nullptr;
+    temp->edge_list = nullptr;
+    if (graph == nullptr) {
+        graph = temp;
+    } else {
+        vertex* ptr = graph;
+        while (ptr->next != nullptr) {
+            ptr = ptr->next;
+        }
+        ptr->next = temp;
+    }
+   
+}
+void add_edge(vertex* graph,int data,int v) {
+    vertex* current = graph;
+    while (current != nullptr) {
+        if (current->data == data) {
+            edge* elist = new edge;
+            elist->to_vertex= v;
+            elist->next = current->edge_list;
+            current->edge_list = elist;
+            std::cout << "edge "<<v<<" " <<"added to the vertex:" <<data<<std::endl;
+            return;
+        }
+        current = current->next;
+    }
+    std::cout << "vertex not found." << std::endl;
+}
+int out_degree(vertex* graph, int data) {
+    vertex* current = graph;
+    while (current != nullptr) {
+        if (current->data == data) {
+            int count = 0;
+            edge* elist = current->edge_list;
+            while (elist != nullptr) {
+                count++;
+                elist = elist->next;
+            }
+            return count;
+        }
+        current = current->next;
+    }
+    return 0; // Vertex not found
+}
+
+int in_degree(vertex* graph, int data) {
+    int count = 0;
+    vertex* current = graph;
+    while (current != nullptr) {
+        edge* elist = current->edge_list;
+        while (elist != nullptr) {
+            if (elist->to_vertex == data) {
+                count++;
+            }
+            elist = elist->next;
+        }
+        current = current->next;
+    }
+    return count;
+}
+
+void print(vertex* graph) {
+    vertex* t = graph;
+    while (t != NULL) {
+        cout << "Vertex " << t->data << " (In-Degree: " << in_degree(graph, t->data) << ", Out-Degree: " << out_degree(graph, t->data) << ")" << endl;
+        t = t->next;
+    }
+}
+void printvertex(vertex *graph){
+vertex*t=graph; 
+while(t!=NULL){
+cout<<t->data;
+t = t->next; 
+cout<<endl;
+}
+}
+int main() {
+vertex *graph =NULL;
+add_vertex(graph, 1);
+add_vertex(graph, 2);
+add_vertex(graph, 4); 
+printvertex(graph);
+add_edge(graph,1,4);
+add_edge(graph,1,2);
+//add_edge(graph,1,3);
+add_edge(graph,2,4);
+//add_edge(graph,4,3);
+print(graph);
+return 0;
+}
