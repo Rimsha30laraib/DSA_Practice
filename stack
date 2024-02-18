@@ -1,0 +1,36 @@
+#include<iostream>
+struct node{
+    int value;
+    struct node*next;
+};
+void push(node*& top, int value) {
+    struct node*newnode=NULL;
+    newnode=(struct node*)malloc(sizeof (struct node));
+    newnode->value = value;
+    newnode->next = top;
+    top = newnode;
+}
+bool pop(node*& top, int& value) {
+    if (top == NULL) {
+        std::cout << "Stack Underflow" << std::endl;
+        return false;
+    }
+    struct node*temp=NULL;
+    temp=(struct node*)malloc(sizeof (struct node));
+    temp = top;
+    value = temp->value;
+    top = temp->next;
+    free(temp);
+    return true;
+}
+int main(){
+    struct node*top=NULL;
+    push(top,34);
+    int poppedValue;
+    if (pop(top, poppedValue)) {
+        std::cout << "Popped: " << poppedValue << std::endl;
+    }
+
+    return 0;
+    
+}
