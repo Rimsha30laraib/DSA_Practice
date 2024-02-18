@@ -1,0 +1,50 @@
+#include <iostream>
+struct student {
+    int id;
+    student* next;
+};
+struct course {
+    int course_no;
+    student* start;
+    course* next;
+};
+course* insert_course(course* cstart, int course_no) {
+course* temp = new course;
+    temp->course_no = course_no;
+    temp->next = cstart;
+    temp->start = NULL;
+    return temp;
+    }
+   
+ void insert_student(course* cstart,int course_no,int student_id) {
+    course* current = cstart;
+    while (current != nullptr) {
+        if (current->course_no == course_no) {
+            student* s = new student;
+            s->id = student_id;
+            s->next = current->start;
+            current->start = s;
+            std::cout << "Student added to the course number:" << course_no<<std::endl;
+            return;
+        }
+        current = current->next;
+    }
+    std::cout << "Course not found." << std::endl;
+}
+void print(course* cstart) {
+    course* current = cstart;
+    while (current != nullptr) {
+        std::cout << current->course_no << std::endl;
+        current = current->next;
+    }
+}
+int main() {
+    course* cstart = nullptr;
+    cstart = insert_course(cstart, 422);
+    cstart = insert_course(cstart, 423);
+    cstart = insert_course(cstart, 424);
+    cstart = insert_course(cstart, 425);
+    cstart = insert_course(cstart, 426);
+    print(cstart);
+   insert_student(cstart,422,8);
+}
