@@ -1,0 +1,85 @@
+#include<iostream>
+using namespace std;
+
+void max_heap(int arr[],int n,int heap_arr[]){
+    heap_arr[0]=arr[0];
+    for(int i=0;i<(n/2);i++){
+    double p=(i-1)/2;
+    int p1 = static_cast<int>(p);
+    int lc=2*i+1;
+    int rc=2*i+2;
+    if(heap_arr[i]>arr[lc]){
+        heap_arr[lc]=arr[lc];
+    }
+   else{
+        int t=heap_arr[i];
+        heap_arr[i]=arr[lc];
+        arr[lc]=t;
+        heap_arr[lc]=arr[lc];
+        if(heap_arr[p1]<heap_arr[i]){
+        int u=heap_arr[i];
+        heap_arr[i]=heap_arr[p1];
+        heap_arr[p1]=u;
+    }
+    }
+    if(heap_arr[i]>arr[rc]){
+        heap_arr[rc]=arr[rc];
+    }
+    else{
+        int t=heap_arr[i];
+        heap_arr[i]=arr[rc];
+        arr[rc]=t;
+        heap_arr[rc]=arr[rc];
+        if(heap_arr[p1]<heap_arr[i]){
+        int u=heap_arr[i];
+        heap_arr[i]=heap_arr[p1];
+        heap_arr[p1]=u;
+        }
+    }
+    }
+}
+
+void heap_sort(int heap_arr[],int n,int heap_sort_arr[],int heap[],int max_sort_arr[]){
+    int j=0;
+    heap_sort_arr=heap_arr;
+    for (int i=n-1;i>=0;i--){
+        int t=heap_sort_arr[0];
+        heap_sort_arr[0]=heap_sort_arr[i];
+        heap_sort_arr[i]=t;
+        heap[j]=heap_sort_arr[i];
+        heap_sort_arr[i]=0;
+        j=j+1;
+        max_heap(heap_sort_arr,n,max_sort_arr);
+        heap_sort_arr=max_sort_arr;
+    }
+}
+
+int main(){
+    int arr[]={75,90,89,78,67,65,45};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int heap_arr[n];
+    int heap_sort_arr[n];
+    int heap[n];
+    int max_sort_arr[n];
+    for (int i = 0; i < n; i++) {
+        heap_arr[i] = 0;
+    }
+    for (int i=0;i<n;i++){
+        cout<<"array list"<<" ";
+        cout<<arr[i]<<endl;
+    }
+    max_heap(arr,n,heap_arr);
+    for (int i=0;i<n;i++){
+        cout<<"heap list"<<" ";
+        cout<<heap_arr[i]<<endl;
+    }
+
+    heap_sort(heap_arr,n,heap_sort_arr,heap,max_sort_arr);
+    for (int i=0;i<n;i++){
+        cout<<"sort heap list"<<" ";
+        cout<<heap[i]<<endl;
+    }
+    
+    return 0;
+
+}
