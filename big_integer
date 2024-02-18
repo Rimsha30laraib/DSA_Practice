@@ -1,0 +1,172 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+
+struct list{
+    int value;
+    list*prev;
+    list*next;
+};
+void insert(list*&list_1,int value){
+    list*temp=(struct list*)malloc(sizeof(struct list));
+    list*ptr=list_1;
+    temp->value=value;
+    temp->prev=nullptr;
+    temp->next=nullptr;
+    if(list_1==nullptr){
+        list_1=temp;
+    }
+    else{
+        while(ptr->next!=nullptr){
+            ptr=ptr->next;
+        }
+        ptr->next=temp;
+        temp->prev=ptr;
+        temp->next=nullptr;
+} 
+}
+void insert_at_beg(list*&my_list,int value){
+    list*temp=(struct list*)malloc(sizeof(struct list));
+    temp->value=value;
+    temp->prev=nullptr;
+    temp->next=my_list;
+    my_list=temp;
+    
+}
+list*subtraction(list*list1,list*list2,list*&sub){
+    list*temp1=list1;
+    list*temp2=list2;
+    int carry=0;
+    int sum=0;
+    while(temp1->next!=nullptr&&temp2->next!=nullptr){
+        temp1=temp1->next;
+        temp2=temp2->next;
+    }
+    while (temp1!= nullptr || temp2 != nullptr ) {
+    sum=0;
+    if(temp1!=nullptr){
+        sum=sum+temp1->value;
+        temp1=temp1->prev;
+        
+    }
+    if(temp2!=nullptr){
+        if(sum<temp2->value){
+            int borrow=10;
+            sum=sum+borrow;
+            if (temp1!= nullptr) {
+                temp1->value=temp1->value-1; 
+           }
+        }
+            sum=sum-temp2->value;
+            temp2=temp2->prev;
+        }
+    insert_at_beg(sub,sum);
+    }
+    return sub;
+}
+list* addition(list*list1,list*list2,list*&add){
+    list*temp1=list1;
+    list*temp2=list2;
+    int carry=0;
+    int sum=0;
+    while(temp1->next!=nullptr&&temp2->next!=nullptr){
+        temp1=temp1->next;
+        temp2=temp2->next;
+    }
+    while (temp1!= nullptr || temp2 != nullptr || carry != 0) {
+    sum=carry;
+    if(temp1!=nullptr){
+        sum=sum+temp1->value;
+        temp1=temp1->prev;
+    }
+    if(temp2!=nullptr){
+        sum=sum+temp2->value;
+        temp2=temp2->prev;
+    }
+    carry = sum / 10;
+    sum = sum % 10;
+    insert_at_beg(add,sum);
+    }
+return add;
+}
+list*multiplication(list*list1,list*list2,list*&multiply){
+    list*temp1=list1;
+    list*temp2=list2;
+   while(temp2->next!=nullptr){
+         temp2=temp2->next;
+    }
+   while(temp2!=nullptr){
+    while(temp1->next!=nullptr){
+        temp1=temp1->next;
+    }
+    int carry=0;
+    int sum=0;
+    while (temp1!= nullptr ||  carry != 0) {
+    sum=carry;
+    int mul=1;
+    if(temp1!=nullptr){
+        mul=mul*temp1->value;
+        temp1=temp1->prev;
+    }
+    else{
+        mul=0;
+    }
+    if(temp2!=nullptr){
+        mul=mul*temp2->value;
+        mul=sum+mul;
+    }
+    carry = mul / 10;
+    mul = mul % 10;
+    insert_at_beg(multiply,mul);
+    }
+    //insert_at_beg(multiply1,-1);
+   // list*curr=multiply;
+    
+    temp2=temp2->prev;
+    temp1=list1;
+    return multiply;
+   }
+
+}
+
+void print(list* integer){
+    list* current = integer;
+    while (current != nullptr) {
+        cout << current->value;
+        current = current->next;
+    }
+    cout<<endl;
+}
+
+int main(){
+    struct list*integer_1=(struct list*)malloc(sizeof(struct list));
+    integer_1=nullptr;
+    insert(integer_1,5);
+    insert(integer_1,7);
+    insert(integer_1,8);
+    insert(integer_1,9);
+    cout<<"integer 1"<<endl;
+    print(integer_1);
+    struct list*integer_2=(struct list*)malloc(sizeof(struct list));
+    integer_2=nullptr;
+    insert(integer_2,8);
+    insert(integer_2,7);
+    insert(integer_2,9);
+    insert(integer_2,5);
+    cout<<"integer 2"<<endl;
+    print(integer_2);
+    list*multiply=nullptr;
+    multiplication(integer_1,integer_2,multiply);
+    cout<<"multiply:"<<endl;
+    print(multiply);
+   
+   list*add=nullptr;
+    addition(integer_1,integer_2,add);
+    cout<<"sum of big integers are"<<endl;
+    print(add);
+    list*sub=nullptr;
+    subtraction(integer_1,integer_2,sub);
+    cout<<"subtraction is"<<endl;
+    print(sub);
+    
+}
