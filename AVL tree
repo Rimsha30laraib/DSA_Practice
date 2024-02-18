@@ -1,0 +1,84 @@
+#include<iostream>
+#include<stdlib.h>
+#include<math.h>
+using namespace std;
+struct bstNode{
+    int data,diff;
+    struct bstNode *left;
+    struct bstNode *right;
+
+};
+
+int height(bstNode*node){
+    int rsheight,lsheight;
+    if(node==NULL){
+        return -1;
+    }
+    lsheight=height(node->left);
+    rsheight=height(node->right);
+    node->diff=abs(rsheight-lsheight);
+    return(node->diff);
+}
+bstNode* shiftLeft(bstNode*node){
+    struct bstNode*nNode=node->right;
+    struct bstNode*leftChild=nNode->left;
+    nNode->left=node;
+    node->right=leftChild;
+    return nNode;
+}
+bstNode* shiftRight(bstNode*node){
+    struct bstNode*nNode=node->left;
+    struct bstNode*rightChild=nNode->right;
+    nNode->right=node;
+    node->left=rightChild;
+    return nNode;
+}
+void preOrder(bstNode*node){
+    if(node!=NULL){
+        cout<<node->data<<" ";
+        preOrder(node->left);
+        preOrder(node->right); 
+    }
+}
+bstNode *insert(bstNode*node,int value){
+    if(node==NULL){
+        struct bstNode*temp=(struct bstNode*)malloc(sizeof(struct bstNode));
+        temp->data=value;
+        temp->left=NULL;
+        temp->right=NULL;
+        return temp;
+    }
+    if(value>node->data){
+        node->right=insert(node->right,value);
+    }
+     if(value<node->data){
+        node->left=insert(node->left,value);
+     }
+       int h=height(node);
+       int lsheight=height(node->left);
+       int rsheight=height(node->left);
+       if(h>1){
+        if (value > node->right->data) {
+            node=shiftLeft(node);
+        }
+        if (value < node->left->data) {
+            node = shiftRight(node);
+        }
+       }
+   return node;
+}
+int main(){
+    struct bstNode*node=(struct bstNode*)malloc(sizeof(struct bstNode));
+    node->data=75;
+    node->left=NULL;
+    node->right=NULL;
+    node=insert(node,23);
+    node=insert(node,99);
+   //node= insert(node,67);
+   //node=insert(node,68);
+   //node= insert(node,111);
+    
+    preOrder(node);
+   
+
+}
