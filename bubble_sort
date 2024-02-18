@@ -1,0 +1,94 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct Node {
+      int id;
+      struct Node* link;
+   };
+void swap(struct Node a, struct Node b) {
+    int temp = a->id;
+    a->id = b->id;
+    b->id = temp;
+}
+//Function to perform bubble sort on the linked list
+void bubbleSort(struct Node *head) {
+    int swapped;
+    struct Node* current;
+    struct Node* tail = NULL;
+
+    if (head == NULL)
+        return;
+
+    do {
+        swapped = 0;
+        current = head;
+
+        while (current->link != tail) {
+            if (current->id> current->link->id) {
+                swap(current, current->link);
+                swapped = 1;
+            }
+            current = current->link;
+        }
+        tail = current;
+    } 
+    while (swapped);
+}
+void print(struct Node*head){
+     if (head==NULL){
+        printf("%d","list is empty");
+        }
+        else{
+        struct Node*ptr=(struct Node*)malloc (sizeof(struct Node));
+        ptr = head;
+        while (ptr!=NULL){ 
+              printf("%d",ptr->id);
+              printf("\t");
+              ptr=ptr->link;
+             
+       }
+        printf("\n");
+        }
+   }
+void add(struct Node*head,int id){
+      struct Node*ptr=(struct Node*)malloc (sizeof(struct Node));
+      ptr=head;
+     struct Node*temp=(struct Node*)malloc (sizeof(struct Node));
+     temp->id=id;
+     temp ->link=NULL;
+      while (ptr->link!=NULL){
+         ptr=ptr->link;
+      }
+      ptr->link=temp;
+  }
+
+
+int main(){
+   struct Node*head=NULL;
+   head =(struct Node*)malloc(sizeof (struct Node));
+   head->id=34;
+   head ->link = NULL;
+   printf("Original list: \n ");
+   print(head);
+    bubbleSort(head);
+    printf("Sorted list: \n ");
+    print(head);
+   add(head,12);
+   printf("Original list: \n ");
+   print(head);
+    bubbleSort(head);
+    printf("Sorted list: \n ");
+    print(head);
+   add(head,5);
+   printf("Original list: \n ");
+   print(head);
+    bubbleSort(head);
+    printf("Sorted list: \n");
+    print(head);
+   add(head,33);
+   printf("Original list: \n ");
+   print(head);
+    bubbleSort(head);
+    printf("Sorted list: \n");
+    print(head);
+    return 0;
+}
