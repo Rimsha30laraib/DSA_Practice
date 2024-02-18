@@ -1,0 +1,116 @@
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
+
+struct list{
+    int value;
+    list*next;
+};
+void insert_at_beg(list*&my_list,int value){
+    list*temp=(struct list*)malloc(sizeof(struct list));
+    temp->value=value;
+    temp->next=my_list;
+    my_list=temp;
+    
+}
+void insert_at_end(list*&my_list,int value){
+    list*ptr=my_list;
+    list*new_node=(struct list*)malloc(sizeof(struct list));
+    new_node->value=value;
+    new_node->next=nullptr;
+    if(my_list->next==nullptr){
+        my_list=new_node;
+    }
+    else{
+        while(ptr->next!=nullptr){
+            ptr=ptr->next;
+        }
+        ptr->next=new_node;
+    }
+}
+void insert_in_between(list*&my_list,int aftervalue,int value){
+    list*new_node=(struct list*)malloc(sizeof(struct list));
+    new_node->value=value;
+    new_node->next=nullptr;
+    list* temp = my_list;
+    while(temp->next!=nullptr){
+        if(temp->value == aftervalue) {
+        new_node->next = temp->next;
+        temp->next = new_node;
+        break;
+    }
+    temp=temp->next;
+    }
+}
+void delete_head(list*&my_list,int value){
+    list* temp = my_list;
+    if(temp->value==value){
+        my_list=temp->next;
+        delete(temp);
+    }
+}
+void del_in_between(list*&my_list,int value){
+    list* temp = my_list;
+    while(temp->next!=nullptr){
+        if(temp->next->value == value) {
+            list*to_delete=temp->next;
+            temp->next=temp->next->next;
+            delete(to_delete);
+             break;
+    }
+    temp=temp->next;
+    } 
+}
+void del_last_node(list*&my_list){
+    list* temp = my_list;
+    while(temp->next->next!=nullptr){
+         temp=temp->next;
+    }
+        free (temp->next); 
+        temp->next=nullptr;
+}
+int count(list*my_list){
+    int count=0;
+    while(my_list!=nullptr){
+            count=count+1;
+            my_list=my_list->next;
+    }
+    return count;
+}
+int middle_value(list*my_list){
+    int c=count(my_list);
+    int mid =c/2;
+    list*current=my_list;
+    for(int i=0;i<mid;i++){
+        current=current->next;
+    }
+    return current->value;
+} 
+void print(list*my_list){
+    list*current=my_list;
+    while(current!=nullptr){
+        cout<<current->value<<endl;
+        current=current->next;
+    }
+
+}
+int main(){
+    struct list*my_list=(struct list*)malloc(sizeof(struct list));
+    my_list=nullptr;
+    insert_at_beg(my_list,57);
+    insert_at_beg(my_list,78);
+    insert_at_beg(my_list,87);
+    insert_at_beg(my_list,90);
+    //print(my_list);
+    insert_at_end(my_list,67);
+    //print(my_list);
+    //insert_in_between(my_list,78,99);
+    //print(my_list);
+    //delete_head(my_list,90);
+    //print(my_list);
+    //del_last_node(my_list);
+    print(my_list);
+    cout<<"the existing list has "<<" "<< count(my_list)<<" "<<"elements"<<endl;
+    cout<<"the middle element of the list is"<<" "<<middle_value(my_list);
+
+}
